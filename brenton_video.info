@@ -1,0 +1,6 @@
+name = Brenton Center Videos
+description = Extends the Video Embed Field module to support videos hosted by the Brenton Center made by Camtasia Relay
+core = 7.x
+version = 7.x-1.0
+project = brenton_video
+dependencies[] = video_embed_field

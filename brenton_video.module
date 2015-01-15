@@ -1,0 +1,111 @@
+<?php
+/**
+ * @file
+ * Code for brenton_video
+ */
+ 
+/*
+ * Implements hook_video_embed_handler_info()
+ */
+function brenton_video_video_embed_handler_info() {
+  $handlers = array();
+  
+  $handlers['brenton'] = array(
+    'title' => 'Brenton Center Video',
+    'function' => '_brenton_video_handle',
+    'thumbnail_function' => '_brenton_video_handle_thumbnail',
+    'thumbnail_default' => drupal_get_path('module', 'brenton_video') . '/img/default.jpg',
+    'data_function' => '_brenton_video_handler_data',
+    'form' => '_brenton_video_handler_form',
+    'form_validate' => '_brenton_video_handler_form_validate',
+    'domains' => array(
+      'delivery1.brenton.iastate.edu',
+      'delivery.brenton.iastate.edu',
+    ),
+    'defaults' => array(
+      'width' => 640,
+      'height' => 360,
+    ),
+  );
+  
+  return $handlers;
+}
+
+/**
+ * Generate the embed code for a video
+ * @param $url - the video url as entered by the user
+ * @param $settings - the settings for this provider as defined in the form function
+ * @return the embode code as a renderable array
+ */
+function _brenton_video_handle($url, $settings) {
+  $url = substr($url, strpos($url, '://') + 1); // make the url protocol relative
+  return array(
+    '#markup' => '<iframe src='.$url.' height="'.$settings['height'].'" width="'.$settings['width'].'"></iframe>',
+  );
+}
+
+/**
+ * Retrieve information about the thumbnail for a given url
+ * @param $url - the url of the video as entered by the user
+ * @return an array with the keys:
+ *   'id' => an id for the video which is unique to your provider, used for naming the cached thumbnail file
+ *   'url' => the url to retrieve the thumnail
+ */
+function _brenton_video_handle_thumbnail($url) {
+  $id = _brenton_video_get_id($url);
+  
+  // Example URL: http://delivery1.brenton.iastate.edu/relay/playground/jrearick/Playground_Profile_Test_by_Camtasia_Relay_-_20130926_163017_14.html
+  // Example Thumbnail URL http://delivery1.brenton.iastate.edu/relay/playground/jrearick/Playground_Profile_Test_by_Camtasia_Relay_-_20130926_163017_14/media/video_thumb.jpg
+  $thumbnail = substr($url, 0, -5) . '/media/video_thumb.jpg';
+  
+  return array(
+    'id' => $id,
+    'url' => $thumbnail,
+  );
+}
+
+/**
+ * Return an array of extra data to be stored with the video, this data will be available for theming
+ * @param $url - the video url as entered by the user
+ * @return an array
+ */
+function _brenton_video_handler_data($url) {
+  return array();
+}
+
+/**
+ * A forms api callback, returns the settings form for the provider
+ * @param $defaults - default/current values for your provider, the currently saved
+ *     settings with empty values filled with the defaults provided in info hook
+ * @return a form as defined by forms api
+ *
+ * @see http://api.drupal.org/api/drupal/developer!topics!forms_api_reference.html/7
+ */
+function _brenton_video_handler_form($defaults) {
+  $form = array();
+  
+  $form['width']  = array(
+    '#type' => 'textfield',
+    '#title' => t('Player Width'),
+    '#description' => t('The width of the player in pixels'),
+    '#default_value' => $defaults['width'],
+  );
+  
+  $form['height'] = array(
+    '#type' => 'textfield',
+    '#title' => t('Player Height'),
+    '#description' => t('The height of the player in pixels'),
+    '#default_value' => $defaults['height'],
+  );
+  
+  return $form;
+}
+
+/**
+ * Helper function to generate a unique ID for each video.
+ * @param $url - the url of the video as entered by the user
+ * @return an md5 of the url string to use as a unique ID
+ */
+function _brenton_video_get_id($url) {
+  return md5($url);
+}
