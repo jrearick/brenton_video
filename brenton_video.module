@@ -14,7 +14,7 @@ function brenton_video_video_embed_handler_info() {
     'title' => 'Brenton Center Video',
     'function' => '_brenton_video_handle',
     'thumbnail_function' => '_brenton_video_handle_thumbnail',
-    'thumbnail_default' => drupal_get_path('module', 'brenton_video') . '/img/default.jpg',
+    'thumbnail_default' => drupal_get_path('module', 'brenton_video') . '/img/default.png',
     'data_function' => '_brenton_video_handler_data',
     'form' => '_brenton_video_handler_form',
     'form_validate' => '_brenton_video_handler_form_validate',
