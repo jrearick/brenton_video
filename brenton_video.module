@@ -15,9 +15,7 @@ function brenton_video_video_embed_handler_info() {
     'function' => '_brenton_video_handle',
     'thumbnail_function' => '_brenton_video_handle_thumbnail',
     'thumbnail_default' => drupal_get_path('module', 'brenton_video') . '/img/default.png',
-    'data_function' => '_brenton_video_handler_data',
     'form' => '_brenton_video_handler_form',
-    'form_validate' => '_brenton_video_handler_form_validate',
     'domains' => array(
       'delivery1.brenton.iastate.edu',
       'delivery.brenton.iastate.edu',
@@ -62,15 +60,6 @@ function _brenton_video_handle_thumbnail($url) {
     'id' => $id,
     'url' => $thumbnail,
   );
-}
-
-/**
- * Return an array of extra data to be stored with the video, this data will be available for theming
- * @param $url - the video url as entered by the user
- * @return an array
- */
-function _brenton_video_handler_data($url) {
-  return array();
 }
 
 /**
